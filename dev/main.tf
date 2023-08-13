@@ -17,6 +17,20 @@ module "terraform_state_backend" {
 }
 
 # Your Terraform configuration
-# module "another_module" {
-#     source = "....."
-# }
+module "vpc" {
+    source = "terraform-aws-modules/vpc/aws"
+
+    name = "ddbp-vpn"
+    cidr = "10.123.0.0/24"
+
+    azs             = ["eu-west-1a", "eu-west-1b", "eu-west-1c"]
+    public_subnets  = ["10.0.101.0/24", "10.0.102.0/24", "10.0.103.0/24"]
+
+    enable_nat_gateway = false
+    enable_vpn_gateway = false
+
+    tags = {
+    Terraform = "true"
+    Environment = "dev"
+    }
+}
