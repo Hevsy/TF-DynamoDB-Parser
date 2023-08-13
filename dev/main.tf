@@ -3,9 +3,9 @@
 # be bootstrapped according to the simple yet essential procedure in
 # https://github.com/cloudposse/terraform-aws-tfstate-backend#usage
 module "terraform_state_backend" {
-    source = "cloudposse/tfstate-backend/aws"
+    source = "github.com/Hevsy/terraform-modules//terraform-aws-tfstate-backend?ref=v1.0.0"
     # Cloud Posse recommends pinning every module to a specific version
-    # version     = "x.x.x"
+    # version     = "1.0.0"
     namespace  = "ppv"
     stage      = "dev"
     name       = "terraform"
