@@ -21,7 +21,7 @@ module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
   version = "5.1.1"
 
-  name = "ddbp-vpn"
+  name = "${var.app}-vpn"
   cidr = "10.123.0.0/24"
 
   azs            = ["eu-west-1a", "eu-west-1b", "eu-west-1c"]
@@ -37,6 +37,12 @@ module "vpc" {
     app         = "${var.app}"
   }
 }
+
+resource "aws_key_pair" "ddbp_auth" {
+  key_name   = "ire1"
+  public_key = file("~/.ssh/ire1.pub")
+}
+
 
 module "ec2_instance" {
   source  = "terraform-aws-modules/ec2-instance/aws"
