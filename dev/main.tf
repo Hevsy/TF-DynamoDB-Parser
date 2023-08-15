@@ -38,11 +38,29 @@ module "vpc" {
   }
 }
 
-resource "aws_key_pair" "ddbp_auth" {
-  key_name   = "ire1"
+resource "aws_key_pair" "ddbp_ire1" {
+  key_name   = "ddp-ire1"
   public_key = file("~/.ssh/ire1.pub")
 }
 
+resource "aws_security_group" "ddbp_ssh_sg" {
+  name        = "public_sg"
+  description = "public security group"
+  vpc_id      = aws_vpc.mtc_vpc.id
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
 
 module "ec2_instance" {
   source  = "terraform-aws-modules/ec2-instance/aws"
@@ -51,10 +69,10 @@ module "ec2_instance" {
   name = "single-instance"
 
   instance_type          = "t2.micro"
-  key_name               = "user1"
-  monitoring             = true
+  key_name               = aws_key_pair.ddbp_ire1.key_name
+  monitoring             = false
   vpc_security_group_ids = ["sg-12345678"]
-  subnet_id              = "subnet-eddcdzz4"
+  subnet_id              = module.vpc.public_subnets[0]
 
   tags = {
     Terraform   = "true"
