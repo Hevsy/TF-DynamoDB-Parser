@@ -43,8 +43,8 @@ resource "aws_key_pair" "ddbp_ire1" {
   public_key = file("~/.ssh/ire1.pub")
 }
 
-resource "aws_security_group" "ddbp_ssh_sg" {
-  name        = "ddbp_ssh_sg"
+resource "aws_security_group" "public_ssh_sg" {
+  name        = "public_ssh_sg"
   description = "public SSH security group"
   vpc_id      = module.vpc.vpc_id
   ingress {
@@ -71,7 +71,7 @@ module "ec2_instance" {
   instance_type          = "t2.micro"
   key_name               = aws_key_pair.ddbp_ire1.key_name
   monitoring             = false
-  vpc_security_group_ids = aws_security_group.ddbp_ssh_sg.id
+  vpc_security_group_ids = aws_security_group.public_ssh_sg.id
   subnet_id              = module.vpc.public_subnets[0]
 
   tags = {
