@@ -44,9 +44,9 @@ resource "aws_key_pair" "ddbp_ire1" {
 }
 
 resource "aws_security_group" "ddbp_ssh_sg" {
-  name        = "public_sg"
-  description = "public security group"
-  vpc_id      = aws_vpc.mtc_vpc.id
+  name        = "ddbp_ssh_sg"
+  description = "public SSH security group"
+  vpc_id      = module.vpc.vpc_id
   ingress {
     from_port   = 22
     to_port     = 22
@@ -66,12 +66,12 @@ module "ec2_instance" {
   source  = "terraform-aws-modules/ec2-instance/aws"
   version = "5.2.1"
 
-  name = "single-instance"
+  name = "DDBP-Dev-node"
 
   instance_type          = "t2.micro"
   key_name               = aws_key_pair.ddbp_ire1.key_name
   monitoring             = false
-  vpc_security_group_ids = ["sg-12345678"]
+  vpc_security_group_ids = aws_security_group.ddbp_ssh_sg.id
   subnet_id              = module.vpc.public_subnets[0]
 
   tags = {
