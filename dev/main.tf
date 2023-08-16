@@ -21,8 +21,8 @@ module "vpc" {
 }
 
 resource "aws_key_pair" "ddbp_ire1" {
-  key_name   = "ddp-ire1"
-  public_key = file("~/.ssh/ire1.pub")
+  key_name   = "ddp_ire1"
+  public_key = file("~/.ssh/ddp_ire1.pub")
 }
 
 resource "aws_security_group" "public_ssh_sg" {
