@@ -53,7 +53,7 @@ module "ec2_instance" {
   instance_type          = "t2.micro"
   key_name               = aws_key_pair.ddbp_ire1.key_name
   monitoring             = false
-  vpc_security_group_ids = aws_security_group.public_ssh_sg.id
+  vpc_security_group_ids = [aws_security_group.public_ssh_sg.id]
   subnet_id              = module.vpc.public_subnets[0]
 
   tags = {
