@@ -7,53 +7,28 @@ module "dynamodb_table" {
   source  = "terraform-aws-modules/dynamodb-table/aws"
   version = "3.3.0"
 
-  name                        = "${var.app}-${random_pet.this.id}"
-  hash_key                    = "id"
-  range_key                   = "title"
+  name                        = "${var.app}-${var.stage}"
+  hash_key                    = "siteId"
   table_class                 = "STANDARD"
   deletion_protection_enabled = false
 
   attributes = [
     {
-      name = "id"
-      type = "N"
-    },
-    {
-      name = "title"
+      name = "siteId"
       type = "S"
-    },
-    {
-      name = "age"
-      type = "N"
-    }
-  ]
-
-  global_secondary_indexes = [
-    {
-      name               = "TitleIndex"
-      hash_key           = "title"
-      range_key          = "age"
-      projection_type    = "INCLUDE"
-      non_key_attributes = ["id"]
     }
   ]
 
   tags = {
     Terraform   = "true"
-    Environment = "staging"
+    App         = "${var.app}"
+    Environment = "${var.stage}"
   }
 }
 
 
-module "disabled_dynamodb_table" {
-  source = "../../"
-
-  create_table = false
-}
-
-
-resource "aws_ssm_parameter" "ddbp-db" {
-  name  = "foo"
-  type  = "String"
-  value = "bar"
-}
+# resource "aws_ssm_parameter" "ddbp-db" {
+#   name  = "foo"
+#   type  = "String"
+#   value = "bar"
+# }
