@@ -7,7 +7,7 @@ module "dynamodb_table" {
   source  = "terraform-aws-modules/dynamodb-table/aws"
   version = "3.3.0"
 
-  name                        = "my-table-${random_pet.this.id}"
+  name                        = "${var.app}-${random_pet.this.id}"
   hash_key                    = "id"
   range_key                   = "title"
   table_class                 = "STANDARD"

@@ -9,6 +9,7 @@ module "terraform_state_backend" {
   namespace  = "ppv"
   stage      = "dev"
   name       = "terraform"
+  profile    = "ppv-tf"
   attributes = ["state"]
 
   terraform_backend_config_file_path = "."

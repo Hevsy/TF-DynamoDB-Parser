@@ -3,7 +3,7 @@ module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
   version = "5.1.1"
 
-  name = "${var.app}-vpn"
+  name = "${var.app}-${var.stage}-vpn"
   cidr = "10.123.0.0/24"
 
   azs            = ["eu-west-1a", "eu-west-1b", "eu-west-1c"]
@@ -15,13 +15,13 @@ module "vpc" {
 
   tags = {
     Terraform   = "true"
-    Environment = "dev"
+    Environment = "${var.stage}"
     app         = "${var.app}"
   }
 }
 
 resource "aws_key_pair" "ddbp_ire1" {
-  key_name   = "ddp_ire1"
+  key_name   = "ddp_ire1-${var.stage}"
   public_key = file("~/.ssh/ddp_ire1.pub")
 }
 
@@ -48,7 +48,7 @@ module "ec2_instance" {
   source  = "terraform-aws-modules/ec2-instance/aws"
   version = "5.2.1"
 
-  name = "DDBP-Dev-node"
+  name = "${var.app}-${var.stage}-node"
 
   instance_type          = "t2.micro"
   key_name               = aws_key_pair.ddbp_ire1.key_name
@@ -58,7 +58,7 @@ module "ec2_instance" {
 
   tags = {
     Terraform   = "true"
-    Environment = "dev"
+    Environment = "${var.stage}"
     app         = "${var.app}"
   }
 }
