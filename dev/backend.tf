@@ -4,7 +4,7 @@ terraform {
   backend "s3" {
     region         = "eu-west-1"
     bucket         = "ppv-dev-terraform-state"
-    key            = "terraform.tfstate"
+    key            = "devnode/terraform.tfstate"
     dynamodb_table = "ppv-dev-terraform-state-lock"
     profile        = "ppv-tf"
     role_arn       = ""
