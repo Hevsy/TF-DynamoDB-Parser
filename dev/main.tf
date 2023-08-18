@@ -4,11 +4,11 @@ module "vpc" {
   version = "5.1.1"
 
   name = "${var.app}-${var.stage}-vpn"
-  cidr = "10.123.0.0/16"
+  cidr = "10.123.0.0/24"
 
   azs            = ["eu-west-1a", "eu-west-1b", "eu-west-1c"]
-  public_subnets = ["10.123.101.0/24"]
-  intra_subnets  = ["10.123.51.0/24"]
+  public_subnets = ["10.123.0.0/25"]
+  intra_subnets  = ["10.123.0.128/25"]
 
   enable_nat_gateway = false
   enable_vpn_gateway = false
