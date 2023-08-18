@@ -4,7 +4,7 @@ module "vpc" {
   version = "5.1.1"
 
   name = "${var.app}-${var.stage}-vpn"
-  cidr = "10.123.0.0/24"
+  cidr = "10.123.0.0/16"
 
   azs            = ["eu-west-1a", "eu-west-1b", "eu-west-1c"]
   public_subnets = ["10.123.101.0/24"]

@@ -1,7 +1,7 @@
 
 variable "app" {
   type    = string
-  default = ""
+  default = "DynamoDB_parser"
 }
 
 variable "stage" {
