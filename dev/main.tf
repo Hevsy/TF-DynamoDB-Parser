@@ -50,11 +50,13 @@ module "ec2_instance" {
 
   name = "${var.app}-${var.stage}-node"
 
-  instance_type          = "t2.micro"
-  key_name               = aws_key_pair.ddbp_ire1.key_name
-  monitoring             = false
-  vpc_security_group_ids = [aws_security_group.public_ssh_sg.id]
-  subnet_id              = module.vpc.public_subnets[0]
+  ami                         = data.aws_ami.amazon_linux_23.id
+  instance_type               = "t2.micro"
+  key_name                    = aws_key_pair.ddbp_ire1.key_name
+  monitoring                  = false
+  vpc_security_group_ids      = [aws_security_group.public_ssh_sg.id]
+  subnet_id                   = module.vpc.public_subnets[0]
+  associate_public_ip_address = true
 
   tags = {
     Terraform   = "true"
