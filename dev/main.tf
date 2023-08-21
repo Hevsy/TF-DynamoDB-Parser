@@ -50,7 +50,7 @@ module "ec2_instance" {
 
   name = "${var.app}-${var.stage}-node"
 
-  ami                         = data.aws_ami.amazon_linux_23.id
+  ami                         = data.aws_ami.server_ami.id
   instance_type               = "t2.micro"
   key_name                    = aws_key_pair.ddbp_ire1.key_name
   monitoring                  = false
