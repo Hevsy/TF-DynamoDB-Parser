@@ -44,6 +44,12 @@ resource "aws_security_group" "public_ssh_sg" {
   }
 }
 
+
+resource "aws_iam_instance_profile" "ddbp-profile" {
+  name = "${var.app}-${var.stage}-profile"
+  role = "${aws_iam_role.test_role.name}"
+}
+
 module "ec2_instance" {
   source  = "terraform-aws-modules/ec2-instance/aws"
   version = "5.2.1"
