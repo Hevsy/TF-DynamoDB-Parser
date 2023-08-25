@@ -45,28 +45,28 @@ resource "aws_security_group" "public_ssh_sg" {
 }
 
 resource "aws_iam_policy" "ddbp_policy" {
-  name = "ddbp_policy"
+  name   = "ddbp_policy"
   policy = data.aws_iam_policy_document.dynamodb_policy.json
 }
 
 
-resource "aws_iam_role" "ddbp_role" {
-  name = "dynamodb_limited_access_role"
+# resource "aws_iam_role" "ddbp_role" {
+#   name = "dynamodb_limited_access_role"
 
-  assume_role_policy = data.aws_iam_policy_document.assume_role_policy.json
-  policy_arn         = dynamodb_policy.policy_arn
+#   assume_role_policy = data.aws_iam_policy_document.assume_role_policy.json
+#   policy_arn         = aws_iam_policy.dynamodb_policy.policy_arn
 
-  tags = {
-    Terraform   = "true"
-    Environment = "${var.stage}"
-    app         = "${var.app}"
-  }
-}
+#   tags = {
+#     Terraform   = "true"
+#     Environment = "${var.stage}"
+#     app         = "${var.app}"
+#   }
+# }
 
-resource "aws_iam_instance_profile" "ddbp_profile" {
-  name = "${var.app}-${var.stage}-profile"
-  role = aws_iam_role.ddbp_role.name
-}
+# resource "aws_iam_instance_profile" "ddbp_profile" {
+#   name = "${var.app}-${var.stage}-profile"
+#   role = aws_iam_role.ddbp_role.name
+# }
 
 module "ec2_instance" {
   source  = "terraform-aws-modules/ec2-instance/aws"
@@ -76,12 +76,16 @@ module "ec2_instance" {
 
   ami                         = data.aws_ami.server_ami.id
   instance_type               = "t2.micro"
-  iam_instance_profile        = aws_iam_instance_profile.name
   key_name                    = aws_key_pair.ddbp_ire1.key_name
   monitoring                  = false
   vpc_security_group_ids      = [aws_security_group.public_ssh_sg.id]
   subnet_id                   = module.vpc.public_subnets[0]
   associate_public_ip_address = true
+  # iam_instance_profile        = aws_iam_instance_profile.ddbp_profile.name
+  create_iam_instance_profile = true
+  iam_role_policies           = { LimitedDynamoDBaccess = aws_iam_policy.ddbp_policy.arn }
+  iam_role_name               = "ddbp_role"
+  ignore_ami_changes          = true
 
   tags = {
     Terraform   = "true"
