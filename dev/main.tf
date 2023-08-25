@@ -44,10 +44,28 @@ resource "aws_security_group" "public_ssh_sg" {
   }
 }
 
+resource "aws_iam_policy" "ddbp_policy" {
+  name = "ddbp_policy"
+  policy = data.aws_iam_policy_document.dynamodb_policy.json
+}
 
-resource "aws_iam_instance_profile" "ddbp-profile" {
+
+resource "aws_iam_role" "ddbp_role" {
+  name = "dynamodb_limited_access_role"
+
+  assume_role_policy = data.aws_iam_policy_document.assume_role_policy.json
+  policy_arn         = dynamodb_policy.policy_arn
+
+  tags = {
+    Terraform   = "true"
+    Environment = "${var.stage}"
+    app         = "${var.app}"
+  }
+}
+
+resource "aws_iam_instance_profile" "ddbp_profile" {
   name = "${var.app}-${var.stage}-profile"
-  role = "${aws_iam_role.test_role.name}"
+  role = aws_iam_role.ddbp_role.name
 }
 
 module "ec2_instance" {
@@ -58,6 +76,7 @@ module "ec2_instance" {
 
   ami                         = data.aws_ami.server_ami.id
   instance_type               = "t2.micro"
+  iam_instance_profile        = aws_iam_instance_profile.name
   key_name                    = aws_key_pair.ddbp_ire1.key_name
   monitoring                  = false
   vpc_security_group_ids      = [aws_security_group.public_ssh_sg.id]
