@@ -16,7 +16,7 @@ module "vpc" {
   tags = {
     Terraform   = "true"
     Environment = "${var.stage}"
-    app         = "${var.app}"
+    App         = "${var.app}"
   }
 }
 
@@ -90,6 +90,6 @@ module "ec2_instance" {
   tags = {
     Terraform   = "true"
     Environment = "${var.stage}"
-    app         = "${var.app}"
+    App         = "${var.app}"
   }
 }
