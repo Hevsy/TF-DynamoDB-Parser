@@ -93,3 +93,8 @@ module "ec2_instance" {
     App         = "${var.app}"
   }
 }
+
+resource "aws_ec2_instance_state" "instance_state" {
+  instance_id = module.ec2_instance.id
+  state       = var.instance_stopped ? "stopped" : "running"
+}
